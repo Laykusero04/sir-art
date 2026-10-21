@@ -14,14 +14,14 @@ npm install
 npm run dev
 ```
 
-Demo password: `SchoolDocs-Demo-2026`
+Common password for every account: `SchoolDocs-Demo-2026`
 
-| Role | Email |
-|---|---|
-| Administrator | admin@schooldocs.test |
-| Principal | principal@schooldocs.test |
-| Teacher, Grade 1 | teacher.grade1@schooldocs.test |
-| Teacher, Grade 2 | teacher.grade2@schooldocs.test |
+| Role | Email | Password |
+|---|---|---|
+| Administrator | admin@schooldocs.test | SchoolDocs-Demo-2026 |
+| Principal | principal@schooldocs.test | SchoolDocs-Demo-2026 |
+| Teacher, Grade 1 | teacher.grade1@schooldocs.test | SchoolDocs-Demo-2026 |
+| Teacher, Grade 2 | teacher.grade2@schooldocs.test | SchoolDocs-Demo-2026 |
 
 If a later decision conflicts with this file, update this file in the same change. A box is marked only when it is true on the hosted project. Checked 21 October 2026.
 
