@@ -46,7 +46,7 @@ export function Filters({
   const periodOptions = periods.filter((period) => !value.schoolYearId || period.school_year_id === value.schoolYearId);
 
   return (
-    <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div data-guide="filters" className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       <Field label="School year">
         <select className={controlClass} value={value.schoolYearId} onChange={(event) => onChange({ ...value, schoolYearId: event.target.value, gradingPeriodId: "" })}>
           <option value="">All</option>

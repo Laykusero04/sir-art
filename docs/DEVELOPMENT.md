@@ -133,6 +133,7 @@ The same numbers can be grouped by teacher, grade, or category. Filters are scho
 - Reminders are in-app. The principal can remind one teacher or everyone still missing a file. A daily job at 00:15 Manila time reminds open slots from 0 to 14 days before the deadline, and once more after the deadline. The same scheduled reminder is not sent twice.
 - The audit row is saved in the same step as the change. Teachers see their own history. The principal sees document events. The administrator sees the full log.
 - The first sign-in shows a privacy notice. The school is the personal information controller. Old submissions are not deleted automatically.
+- A Guide button on each page opens a walkthrough of that page. Each step points at a section and says what it is and how to use it. It does not open by itself.
 
 ## Pages
 

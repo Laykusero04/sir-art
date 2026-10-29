@@ -93,7 +93,7 @@ export function CalendarPage() {
         title="Calendar"
         lede="Each deadline is shown on its Manila date. Cancelled slots are left off the month."
         action={
-          <div className="flex gap-2">
+          <div data-guide="month-nav" className="flex gap-2">
             <Button tone="ghost" onClick={() => setCursor((current) => shiftMonth(current.year, current.month, -1))}>Previous</Button>
             <Button tone="ghost" onClick={() => {
               const [year, month] = todayKey.split("-").map(Number);
@@ -104,6 +104,7 @@ export function CalendarPage() {
         }
       />
       <ErrorText>{error}</ErrorText>
+      <div data-guide="month">
       <h2 className="mb-3 font-display text-2xl">{monthTitle(cursor.year, cursor.month)}</h2>
       <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-muted">
         {weekdays.map((day) => <div key={day} className="py-1">{day}</div>)}
@@ -136,7 +137,8 @@ export function CalendarPage() {
           );
         })}
       </div>
-      <Panel className="mt-4">
+      </div>
+      <Panel guide="day" className="mt-4">
         <h2 className="font-display text-2xl">Due {formatDate(`${selected}T12:00:00+08:00`)}</h2>
         {selectedSlots.length === 0 ? <Empty>Nothing is due on this date.</Empty> : (
           <ul className="mt-3 space-y-2">

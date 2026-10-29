@@ -3,6 +3,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 import { supabase } from "../lib/supabase";
 import type { Role } from "../lib/types";
+import { GuideProvider } from "./Guide";
 
 const links: Record<Role, Array<[string, string]>> = {
   principal: [
@@ -71,7 +72,7 @@ export function Shell() {
         <div className="border-t border-white/10 p-4 text-sm">
           <p className="font-semibold">{profile.full_name}</p>
           <p className="capitalize text-white/60">{profile.role}</p>
-          <button className="mt-3 text-gold" onClick={() => void supabase.auth.signOut()}>
+          <button className="mt-3 block text-gold" onClick={() => void supabase.auth.signOut()}>
             Sign out
           </button>
           <p className="mt-4 text-xs leading-5 text-white/50">
@@ -89,7 +90,9 @@ export function Shell() {
           <span className="font-display text-lg">SchoolDocs PH</span>
         </header>
         <main className="mx-auto max-w-6xl px-4 py-6 md:px-8">
-          <Outlet />
+          <GuideProvider role={profile.role}>
+            <Outlet />
+          </GuideProvider>
         </main>
       </div>
     </div>

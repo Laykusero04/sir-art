@@ -85,7 +85,7 @@ export function SchoolCensus() {
         lede="Counts of schools, principals, and teachers. The principal sets up the school, the teacher accounts, and the templates."
       />
       <ErrorText>{error}</ErrorText>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div data-guide="totals" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {totals.map(([label, value]) => (
           <Panel key={label}>
             <p className="text-sm text-muted">{label}</p>
@@ -93,7 +93,7 @@ export function SchoolCensus() {
           </Panel>
         ))}
       </div>
-      <div className="mt-6 space-y-3">
+      <div data-guide="schools" className="mt-6 space-y-3">
         {schools.length === 0 ? <Empty>No schools are on record.</Empty> : schools.map((school) => (
           <Panel key={school.school_id} className="space-y-3">
             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -179,7 +179,7 @@ export function ComplianceDashboard() {
       />
       <Filters value={filters} onChange={setFilters} showTeacher={profile.role !== "teacher"} />
       <ErrorText>{error}</ErrorText>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div data-guide="counts" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map(([key, label]) => (
           <Panel key={key}>
             <p className="text-sm text-muted">{label}</p>
@@ -187,14 +187,14 @@ export function ComplianceDashboard() {
           </Panel>
         ))}
       </div>
-      {summary ? (
-        <p className="mt-4 text-sm text-muted">
-          Submission rate {summary.submission_rate}% · Approval rate {summary.approval_rate}% · On-time approval {summary.on_time_approval_rate}%
-        </p>
-      ) : null}
+      <p data-guide="rates" className="mt-4 text-sm text-muted">
+        {summary
+          ? `Submission rate ${summary.submission_rate}% · Approval rate ${summary.approval_rate}% · On-time approval ${summary.on_time_approval_rate}%`
+          : "Rates appear with the counts."}
+      </p>
 
       {profile.role === "teacher" ? (
-        <div className="mt-6">
+        <div data-guide="waiting" className="mt-6">
           <h2 className="mb-2 font-display text-2xl">Waiting on you</h2>
           {waiting.length === 0 ? <Empty>Nothing is waiting on you for this filter.</Empty> : (
             <div className="space-y-2">
@@ -214,7 +214,7 @@ export function ComplianceDashboard() {
         </div>
       ) : (
         <div className="mt-6 grid gap-4 lg:grid-cols-2">
-          <Panel>
+          <Panel guide="by-teacher">
             <h2 className="font-display text-2xl">By teacher</h2>
             {(summary?.by_teacher.length ?? 0) === 0 ? <Empty>No slots in this filter.</Empty> : (
               <ul className="mt-3 space-y-2 text-sm">
@@ -227,7 +227,7 @@ export function ComplianceDashboard() {
               </ul>
             )}
           </Panel>
-          <Panel>
+          <Panel guide="overdue">
             <h2 className="font-display text-2xl">Overdue</h2>
             {overdue.length === 0 ? <Empty>No overdue requirements in this filter.</Empty> : (
               <ul className="mt-3 space-y-2 text-sm">

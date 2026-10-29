@@ -40,6 +40,7 @@ export function ReviewQueue() {
     <div>
       <PageHeader title="Submission review" lede="Files waiting for a decision." />
       <ErrorText>{error}</ErrorText>
+      <div data-guide="list">
       {slots.length === 0 ? <Empty>Nothing is waiting for review.</Empty> : (
         <div className="space-y-2">
           {slots.map((slot) => (
@@ -55,6 +56,7 @@ export function ReviewQueue() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
@@ -105,7 +107,8 @@ export function ReviewDetail() {
   return (
     <div className="space-y-4">
       <PageHeader title={slot.requirement_title} lede={`${slot.teacher_name} · due ${formatDate(slot.deadline)}`} action={<StatusBadge status={slot.workflow_status} late={slot.is_late} overdue={slot.is_overdue} />} />
-      <p className="whitespace-pre-wrap text-sm">{slot.instructions}</p>
+      <p data-guide="instructions" className="whitespace-pre-wrap text-sm">{slot.instructions}</p>
+      <div data-guide="versions" className="space-y-4">
       {versions.map((version) => (
         <Panel key={version.id}>
           <p className="font-semibold">Version {version.version} · {formatWhen(version.submitted_at)}{version.submitted_late ? " · late" : ""}</p>
@@ -124,8 +127,9 @@ export function ReviewDetail() {
           </ul>
         </Panel>
       ))}
+      </div>
       {canReview ? (
-        <Panel className="space-y-3">
+        <Panel guide="decision" className="space-y-3">
           <Field label="Comment">
             <textarea className={controlClass} rows={3} value={comment} onChange={(event) => setComment(event.target.value)} />
           </Field>

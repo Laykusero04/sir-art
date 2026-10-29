@@ -110,9 +110,10 @@ export function Requirements() {
       <PageHeader
         title={principal ? "Document requirements" : "Assigned requirements"}
         lede={principal ? "Save a draft, assign teachers, then activate it." : "Requirements that fall inside your assignments."}
-        action={principal ? <Link to="/requirements/new"><Button>New requirement</Button></Link> : null}
+        action={principal ? <Link data-guide="new" to="/requirements/new"><Button>New requirement</Button></Link> : null}
       />
       <ErrorText>{error}</ErrorText>
+      <div data-guide="list">
       {rows.length === 0 ? <Empty>No requirements yet.</Empty> : (
         <div className="space-y-2">
           {rows.map((row) => (
@@ -128,6 +129,7 @@ export function Requirements() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
@@ -187,8 +189,11 @@ export function RequirementForm() {
   return (
     <form onSubmit={save} className="mx-auto max-w-2xl space-y-4">
       <PageHeader title="New requirement" lede="This stays a draft until you assign teachers and activate it." />
+      <div data-guide="details" className="space-y-4">
       <Field label="Title"><input className={controlClass} required value={title} onChange={(event) => setTitle(event.target.value)} /></Field>
       <Field label="Instructions"><textarea className={controlClass} rows={4} value={instructions} onChange={(event) => setInstructions(event.target.value)} /></Field>
+      </div>
+      <div data-guide="schedule" className="space-y-4">
       <Field label="Category">
         <select className={controlClass} required value={categoryId} onChange={(event) => setCategoryId(event.target.value)}>
           <option value="">Choose</option>
@@ -216,7 +221,8 @@ export function RequirementForm() {
           <option value="monthly">Every month</option>
         </select>
       </Field>
-      <fieldset>
+      </div>
+      <fieldset data-guide="files">
         <legend className="text-sm font-semibold">Allowed files</legend>
         <div className="mt-2 flex flex-wrap gap-3 text-sm">
           {extensions.map((ext) => (
@@ -232,7 +238,9 @@ export function RequirementForm() {
         </div>
       </fieldset>
       <ErrorText>{error}</ErrorText>
-      <Button type="submit">Save draft</Button>
+      <div data-guide="save">
+        <Button type="submit">Save draft</Button>
+      </div>
     </form>
   );
 }
@@ -345,7 +353,7 @@ export function RequirementDetail() {
   return (
     <div className="space-y-4">
       <PageHeader title={requirement.title} lede={requirement.document_categories?.name} action={<StatusBadge status={requirement.state} />} />
-      <Panel>
+      <Panel guide="summary">
         <p className="whitespace-pre-wrap text-sm">{requirement.instructions || "No instructions."}</p>
         <p className="mt-2 text-sm text-muted">Due {formatDate(requirement.deadline)} · {repeatLabel(requirement.recurrence_rule)} · {slots.length} open slot{slots.length === 1 ? "" : "s"}</p>
         {requirement.document_categories?.template_path ? (
@@ -356,7 +364,7 @@ export function RequirementDetail() {
         {requirement.recurrence_rule ? <p className="mt-2 text-sm text-muted">The next occurrence opens the day after this deadline, through the end of the school year. This occurrence stays in the totals and in history.</p> : null}
       </Panel>
       {principal && requirement.state !== "inactive" ? (
-        <Panel className="space-y-3">
+        <Panel guide="assignment" className="space-y-3">
           <h2 className="font-display text-2xl">Assignment</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             <Field label="Assign to">
@@ -427,7 +435,7 @@ export function RequirementDetail() {
       ) : null}
       <ErrorText>{error}</ErrorText>
       {message ? <p className="text-sm font-semibold text-teal-dark">{message}</p> : null}
-      <div className="space-y-2">
+      <div data-guide="slots" className="space-y-2">
         {slots.map((slot) => (
           <Panel key={slot.id} className="flex flex-wrap items-center justify-between gap-3">
             <div>

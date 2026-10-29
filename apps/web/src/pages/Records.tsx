@@ -146,17 +146,19 @@ export function Reports() {
     <div>
       <PageHeader title="Reports" lede="Excel and PDF use the same rows and the same filter header." />
       <Filters value={filters} onChange={setFilters} />
+      <div data-guide="export" className="space-y-4">
       <Field label="Report">
         <select className={controlClass} value={type} onChange={(event) => setType(event.target.value as typeof type)}>
           {reports.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
         </select>
       </Field>
-      <div className="mt-4 flex gap-2">
+      <div className="flex gap-2">
         <Button disabled={busy} onClick={() => void exportReport("xlsx")}>Export Excel</Button>
         <Button tone="ghost" disabled={busy} onClick={() => void exportReport("pdf")}>Export PDF</Button>
       </div>
+      </div>
       {monitor ? (
-        <Panel className="mt-4 space-y-3">
+        <Panel guide="saved" className="mt-4 space-y-3">
           <h2 className="font-display text-2xl">Saved filters</h2>
           {!filtersReady ? <p className="text-sm text-muted">Saved filters are not on the database yet.</p> : null}
           <div className="flex flex-wrap gap-2">
@@ -201,7 +203,7 @@ export function Notifications() {
     <div className="space-y-4">
       <PageHeader title="Notifications" />
       {profile?.role === "principal" ? (
-        <Panel className="space-y-3">
+        <Panel guide="announce" className="space-y-3">
           <h2 className="font-display text-2xl">Announcement</h2>
           <Field label="Title"><input className={controlClass} value={title} onChange={(event) => setTitle(event.target.value)} /></Field>
           <Field label="Message"><textarea className={controlClass} rows={3} value={body} onChange={(event) => setBody(event.target.value)} /></Field>
@@ -221,6 +223,7 @@ export function Notifications() {
           {message ? <p className="text-sm text-teal-dark">{message}</p> : null}
         </Panel>
       ) : null}
+      <div data-guide="inbox">
       {rows.length === 0 ? <Empty>No notifications.</Empty> : rows.map((row) => (
         <button
           key={row.id}
@@ -234,6 +237,7 @@ export function Notifications() {
           </Panel>
         </button>
       ))}
+      </div>
     </div>
   );
 }
@@ -268,6 +272,7 @@ export function Repository() {
   return (
     <div>
       <PageHeader title="Document repository" lede="Approved work stays on this list, including late approvals. Opening a submitted file stays with the principal." />
+      <div data-guide="list">
       {slots.length === 0 ? <Empty>No approved documents yet.</Empty> : (
         <div className="space-y-2">
           {slots.map((slot) => (
@@ -290,6 +295,7 @@ export function Repository() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
@@ -302,6 +308,7 @@ export function Roster() {
   return (
     <div>
       <PageHeader title="Teachers" lede="Open a teacher to see their filtered compliance." />
+      <div data-guide="list">
       {teachers.length === 0 ? <Empty>No teachers are visible for your account.</Empty> : (
         <div className="space-y-2">
           {teachers.map((teacher) => (
@@ -314,6 +321,7 @@ export function Roster() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
@@ -340,6 +348,7 @@ export function History() {
     <div>
       <PageHeader title="Submission history" lede="Open a file from any version you submitted." />
       <ErrorText>{error}</ErrorText>
+      <div data-guide="list">
       {rows.length === 0 ? <Empty>No submissions yet.</Empty> : rows.map((row) => (
         <Panel key={row.id} className="mb-2">
           <p className="font-semibold">{slots[row.slot_id]?.requirement_title || "Requirement"} · version {row.version}</p>
@@ -354,6 +363,7 @@ export function History() {
           </div>
         </Panel>
       ))}
+      </div>
     </div>
   );
 }
@@ -366,6 +376,7 @@ export function Feedback() {
   return (
     <div>
       <PageHeader title="Feedback and revisions" />
+      <div data-guide="list">
       {slots.length === 0 ? <Empty>Nothing has been returned for revision.</Empty> : slots.map((slot) => (
         <Link key={slot.id} to={`/submit/${slot.id}`} className="mb-2 block">
           <Panel>
@@ -374,6 +385,7 @@ export function Feedback() {
           </Panel>
         </Link>
       ))}
+      </div>
     </div>
   );
 }
@@ -395,8 +407,10 @@ export function ProfilePage() {
       });
     }}>
       <PageHeader title="Profile" lede={profile.email} />
+      <div data-guide="name">
       <Field label="Name"><input className={controlClass} value={name} onChange={(event) => setName(event.target.value)} /></Field>
-      <p className="text-sm text-muted">Grade and section assignments are maintained by the principal.</p>
+      </div>
+      <p data-guide="assignment" className="text-sm text-muted">Grade and section assignments are maintained by the principal.</p>
       {message ? <p className="text-sm">{message}</p> : null}
       <Button type="submit">Save</Button>
     </form>
@@ -447,10 +461,11 @@ export function SchoolSettings() {
       });
     }}>
       <PageHeader title="School settings" lede="Scheduled reminders go out every day at 12:15 a.m. Manila time." />
-      <Panel>
+      <Panel guide="school">
         <p className="font-semibold">{school?.name}</p>
         <p className="text-sm text-muted">{school?.address || "No address yet"} · DepEd ID {school?.deped_school_id || "—"}</p>
       </Panel>
+      <div data-guide="reminders" className="space-y-4">
       <label className="flex items-center gap-2 text-sm font-semibold">
         <input type="checkbox" checked={scheduled} onChange={(event) => setScheduled(event.target.checked)} />
         Send deadline and overdue reminders
@@ -462,6 +477,7 @@ export function SchoolSettings() {
         <textarea className={controlClass} rows={3} value={template} onChange={(event) => setTemplate(event.target.value)} />
       </Field>
       <p className="text-sm text-muted">Each open slot gets one reminder inside this window, and one more after the deadline if it is still not approved.</p>
+      </div>
       {message ? <p className="text-sm">{message}</p> : null}
       <Button type="submit">Save reminder schedule</Button>
     </form>

@@ -60,12 +60,12 @@ export function SchoolSetup() {
   return (
     <div className="space-y-4">
       <PageHeader title="School setup" lede="Master records for this school. The administrator monitors compliance and does not approve files." />
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div data-guide="status" className="grid gap-3 sm:grid-cols-3">
         <Panel><p className="text-sm text-muted">Inactive accounts</p><p className="font-display text-3xl">{inactive}</p></Panel>
         <Panel><p className="text-sm text-muted">Storage errors</p><p className="text-sm">No storage errors recorded.</p></Panel>
         <Panel><Link className="font-semibold text-teal" to="/admin/users">Teacher accounts</Link></Panel>
       </div>
-      <form className="grid gap-3 sm:grid-cols-2" onSubmit={(event) => {
+      <form data-guide="profile" className="grid gap-3 sm:grid-cols-2" onSubmit={(event) => {
         event.preventDefault();
         void supabase.from("schools").select("id").maybeSingle().then(async ({ data }) => {
           if (!data) return;
@@ -82,7 +82,7 @@ export function SchoolSetup() {
         ))}
         <Button type="submit">Save school</Button>
       </form>
-      <Panel className="space-y-3">
+      <Panel guide="years" className="space-y-3">
         <h2 className="font-display text-2xl">School years</h2>
         {years.map((year) => <p key={year.id}>{year.label}{year.is_current ? " · current" : ""}</p>)}
         <div className="grid gap-3 sm:grid-cols-3">
@@ -135,7 +135,7 @@ export function UsersPage() {
         title="Teacher accounts"
         lede={`Teachers invited to ${schoolName}. A new invite is added to this list.`}
       />
-      <form className="grid gap-3 sm:grid-cols-4" onSubmit={(event) => {
+      <form data-guide="invite" className="grid gap-3 sm:grid-cols-4" onSubmit={(event) => {
         event.preventDefault();
         setBusy(true);
         setError(null);
@@ -173,6 +173,7 @@ export function UsersPage() {
           <Button tone="ghost" onClick={() => void navigator.clipboard.writeText(inviteUrl)}>Copy link</Button>
         </Panel>
       ) : null}
+      <div data-guide="teachers">
       <h2 className="text-sm font-semibold">{users.length} {users.length === 1 ? "teacher" : "teachers"} in this school</h2>
       {users.length === 0 ? <Empty>No teachers invited to this school yet.</Empty> : users.map((user) => (
         <Panel key={user.id} className="flex flex-wrap items-center justify-between gap-3">
@@ -187,6 +188,7 @@ export function UsersPage() {
           ) : null}
         </Panel>
       ))}
+      </div>
     </div>
   );
 }
@@ -195,6 +197,7 @@ export function RolesPage() {
   return (
     <div className="max-w-xl space-y-4">
       <PageHeader title="Roles and permissions" lede="Each person has one role. The principal invites teachers." />
+      <div data-guide="roles" className="space-y-4">
       <Panel>
         <p className="font-semibold">Teacher</p>
         <p className="mt-1 text-sm text-muted">Submits assigned documents and reads their own files and feedback.</p>
@@ -207,6 +210,7 @@ export function RolesPage() {
         <p className="font-semibold">Administrator</p>
         <p className="mt-1 text-sm text-muted">Monitors compliance, deadlines, reports, and the audit log. This role cannot approve a file or open a submitted file.</p>
       </Panel>
+      </div>
     </div>
   );
 }
@@ -377,7 +381,7 @@ export function CategoriesPage() {
       {!templatesReady ? <p className="text-sm text-muted">Template files are not on the database yet.</p> : null}
       <ErrorText>{error}</ErrorText>
       {message ? <p className="text-sm font-semibold text-teal-dark">{message}</p> : null}
-      <form className="flex flex-wrap gap-3" onSubmit={(event) => {
+      <form data-guide="add" className="flex flex-wrap gap-3" onSubmit={(event) => {
         event.preventDefault();
         void (async () => {
           if (!schoolId) return;
@@ -398,6 +402,7 @@ export function CategoriesPage() {
         <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={sensitive} onChange={(event) => setSensitive(event.target.checked)} /> Learner record</label>
         <Button type="submit">Add category</Button>
       </form>
+      <div data-guide="categories">
       {rows.map((row) => (
         <Panel key={row.id} className="space-y-3">
           {editingId === row.id ? (
@@ -460,6 +465,7 @@ export function CategoriesPage() {
           ) : null}
         </Panel>
       ))}
+      </div>
     </div>
   );
 }
@@ -477,12 +483,14 @@ export function AuditPage() {
     <div>
       <PageHeader title="Audit log" />
       <ErrorText>{error}</ErrorText>
+      <div data-guide="log">
       {rows.length === 0 ? <Empty>No activity recorded yet.</Empty> : rows.map((row) => (
         <Panel key={row.id} className="mb-2">
           <p className="font-semibold">{row.action} · {row.entity_type}</p>
           <p className="text-sm text-muted">{formatWhen(row.created_at)}</p>
         </Panel>
       ))}
+      </div>
     </div>
   );
 }
@@ -510,10 +518,12 @@ export function SystemSettings() {
       });
     }}>
       <PageHeader title="System settings" />
+      <div data-guide="size">
       <Field label="Maximum file size (MB, up to 50)">
         <input className={controlClass} type="number" min={1} max={50} value={cap} onChange={(event) => setCap(Number(event.target.value))} />
       </Field>
-      <div className="flex flex-wrap gap-3 text-sm">
+      </div>
+      <div data-guide="types" className="flex flex-wrap gap-3 text-sm">
         {extensions.map((ext) => (
           <label key={ext} className="flex items-center gap-1">
             <input type="checkbox" checked={chosen.includes(ext)} onChange={(event) => setChosen(event.target.checked ? [...chosen, ext] : chosen.filter((item) => item !== ext))} />
@@ -521,9 +531,11 @@ export function SystemSettings() {
           </label>
         ))}
       </div>
+      <div data-guide="backup">
       <Field label="Backup note">
         <textarea className={controlClass} rows={3} value={note} onChange={(event) => setNote(event.target.value)} />
       </Field>
+      </div>
       {message ? <p className="text-sm">{message}</p> : null}
       <Button type="submit">Save settings</Button>
     </form>

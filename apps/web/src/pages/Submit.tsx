@@ -21,6 +21,7 @@ export function SubmitList() {
   return (
     <div>
       <PageHeader title="Submit document" lede="Choose one of your open requirements." />
+      <div data-guide="list">
       {slots.length === 0 ? <Empty>You have no open requirements.</Empty> : (
         <div className="space-y-2">
           {slots.map((slot) => (
@@ -36,6 +37,7 @@ export function SubmitList() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }
@@ -86,7 +88,7 @@ export function SubmitForm() {
   return (
     <form onSubmit={submit} className="mx-auto max-w-2xl space-y-4">
       <PageHeader title={slot.requirement_title} lede={`Due ${formatDate(slot.deadline)} · ${slot.category_name}`} />
-      <Panel>
+      <Panel guide="instructions">
         <p className="whitespace-pre-wrap text-sm">{slot.instructions || "No extra instructions."}</p>
         {slot.template_path ? (
           <Button type="button" className="mt-3" tone="ghost" onClick={() => void openStoredFile(slot.template_path || "").catch((caught) => setError(errorText(caught)))}>
@@ -94,15 +96,21 @@ export function SubmitForm() {
           </Button>
         ) : null}
       </Panel>
+      <div data-guide="files">
       <Field label="Files">
         <input className={controlClass} type="file" required multiple={slot.max_files > 1} accept={slot.allowed_extensions.map((ext) => `.${ext}`).join(",")} onChange={(event) => setFiles(event.target.files)} />
       </Field>
+      </div>
+      <div data-guide="notes">
       <Field label="Notes">
         <textarea className={controlClass} rows={3} value={notes} onChange={(event) => setNotes(event.target.value)} />
       </Field>
+      </div>
       <ErrorText>{error}</ErrorText>
       {result ? <p className="text-sm font-semibold text-teal-dark">{result}</p> : null}
+      <div data-guide="upload">
       <Button type="submit" disabled={busy}>{busy ? "Uploading…" : slot.workflow_status === "needs_revision" ? "Resubmit" : "Upload"}</Button>
+      </div>
     </form>
   );
 }
